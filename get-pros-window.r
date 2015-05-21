@@ -26,13 +26,25 @@ window.file  <- args[4]
 window.type <- strsplit(basename(window.file), "\\.")[[1]][2]
 print(window.type)
 
+
 segs <- fread(window.file)
-segs <- segs[,list(conv, xid=paste(conv, spk, sep="-"), niteid=sent.id, wstarts=starttime, wends=endtime)]
+
+if (grepl("sent", window.type)) {
+	setnames(segs, "sent.id", "niteid")	
+} else if (grepl("word", window.type)){
+	setnames(segs, "word.id", "niteid")	
+} else if (grepl("seg", window.type)){
+	setnames(segs, "seg.id", "niteid")	
+} else {
+	print("What windowtype?")
+}
+
+segs <- segs[,list(conv, xid=paste(conv, spk, sep="-"), niteid, wstarts=starttime, wends=endtime)]
 print(segs)
 
 x.list <- dlply(segs, .(xid), function(x) {x})
 print(paste("spk NAMES:", names(x.list)))
-
+print(names(x.list[1]))
 ## get feature time series 
 objfile <- paste(xdir, "/", featname, "/", currconv, sep="")		
 xobj <- load(objfile)

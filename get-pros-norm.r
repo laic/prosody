@@ -66,7 +66,13 @@ if (grep(".txt", spurtfile)) {
 		}
 		if ("sent.id" %in% names(spurts.channel)) {
 			setnames(spurts.channel, "sent.id", "wid")
-		}
+		} else if ("seg.id" %in% names(spurts.channel)) {
+			setnames(spurts.channel, "seg.id", "wid")
+		} else if ("word.id" %in% names(spurts.channel)) {
+			setnames(spurts.channel, "word.id", "wid")
+		} else {
+			print("no id?")  
+		}	
 	}
 } else {
 	spurts.obj <- load(spurtfile)

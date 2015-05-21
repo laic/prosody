@@ -8,16 +8,14 @@ DATADIR=~/lubbock/data/ted-trans/derived/
 SEGSDIR=$DATADIR/segs/
 
 
-#(cd $PROSODY
-
 mkdir -p $SEGSDIR
 
-#echo "*** raw pros***"
-./extract-spurt-feats.sh "$DATADIR/alignsent/${ALTCONV}.alignsent.txt" $DATADIR/prosfeats/ $DATADIR/wav/  > feat.log.txt
+echo "*** raw pros***"
+./extract-spurt-feats.sh "$DATADIR/alignseg/${ALTCONV}.alignseg.txt" $DATADIR/prosfeats/ $DATADIR/wav/  > feat.log.txt
 
 RSCRIPTS=$PROSODY/
 echo "*** normalize ***"
-SPURTSFILE=$DATADIR/alignsent/$ALTCONV.alignsent.txt
+SPURTSFILE=$DATADIR/alignseg/$ALTCONV.alignseg.txt
 if [ ! -e $SEGSDIR/conv ]
 then
 	ln -s $DATADIR/prosfeats $SEGSDIR/conv 
@@ -29,11 +27,19 @@ Rscript $RSCRIPTS/get-pros-norm.r $CONV f0 $SEGSDIR $SPURTSFILE
 Rscript $RSCRIPTS/get-pros-norm.r $CONV i0 $SEGSDIR $SPURTSFILE
 
 echo "*** word aggs***"
-Rscript $RSCRIPTS/get-pros-window.r $CONV f0 $SEGSDIR $SPURTSFILE
-Rscript $RSCRIPTS/get-pros-window.r $CONV i0 $SEGSDIR $SPURTSFILE
+WORDFILE=$DATADIR/alignword/$ALTCONV.alignword.txt
+Rscript $RSCRIPTS/get-pros-window.r $CONV f0 $SEGSDIR $WORDFILE
+Rscript $RSCRIPTS/get-pros-window.r $CONV i0 $SEGSDIR $WORDFILE
+
+SEGFILE=$DATADIR/alignseg/$ALTCONV.alignseg.txt
+Rscript $RSCRIPTS/get-pros-window.r $CONV f0 $SEGSDIR $SEGFILE
+Rscript $RSCRIPTS/get-pros-window.r $CONV i0 $SEGSDIR $SEGFILE
+
+SENTFILE=$DATADIR/alignsent/$ALTCONV.alignsent.txt
+Rscript $RSCRIPTS/get-pros-window.r $CONV f0 $SEGSDIR $SENTFILE
+Rscript $RSCRIPTS/get-pros-window.r $CONV i0 $SEGSDIR $SENTFILE
 
 #)
-
 
 
 
