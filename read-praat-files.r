@@ -44,11 +44,18 @@ normalize.conv <- function(x, x.aggs, var.name="F0", st=c("mean.val", "q5.val", 
 
         norm.conv <- NULL
         for (currpart in participants) {
+		print("-----------------------------------")
 		print(currpart)
-		curr.norm <- normalize.vals.spk(u[participant==currpart], x.aggs, var.name=var.name, 
-			st=st, zscore=zscore, center=center, remove.outliers=remove.outliers, 
-			remove.spurt.slope=remove.spurt.slope)	
-                norm.conv <- rbind(norm.conv, curr.norm)
+		if (nrow(u[participant==currpart]) > 3) { 
+			curr.norm <- normalize.vals.spk(u[participant==currpart], x.aggs, var.name=var.name, 
+				st=st, zscore=zscore, center=center, remove.outliers=remove.outliers, 
+				remove.spurt.slope=remove.spurt.slope)	
+			
+			norm.conv <- rbindlist(list(norm.conv, curr.norm))
+		} else {
+			print("Less than 3 data points for speakers")
+		}
+		
         }
 
         return(norm.conv)
@@ -108,6 +115,10 @@ normalize.vals.spk <- function(u, x.aggs, var.name="F0", st=c("mean.val", "q5.va
 	}
 
         setnames(norm.u, names(norm.u), gsub("val",var.name, names(norm.u)))
+
+
+	print(norm.u)
+	print("***HERE")
         return(norm.u)
 
 

@@ -96,6 +96,8 @@ setnames(x.aggs, names(x.aggs), gsub(var.name, "val", names(x.aggs)))
 ## We keep the non-corrected version anyway.
 x.norm <- normalize.conv(x.offset, x.aggs, var.name=var.name, st=st, zscore=F, center=T, remove.outliers=T, remove.spurt.slope=T)
 
+print("HERE")
+
 ## Adds some extra bibs and bobs
 conv.maxtime  <- spurts.channel[,list(maxtime=max(endtime, na.rm=T)),by=conv]
 x.norm <- add.maxtime(x.norm, conv.maxtime=unique(conv.maxtime))
