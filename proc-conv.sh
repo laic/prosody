@@ -1,8 +1,9 @@
 #!/bin/bash
 
-ALTCONV=$1 #APPENUKENG003583
-SSCRIPTS=~/corpus/scripts/
+ALTCONV=$1 # e.g. APPENUKENG003583, should match $ALTCONV.alignseg.txt
+#SSCRIPTS=~/corpus/scripts/
 PROSODY=~/prosody/
+RSCRIPTS=$PROSODY/
 
 DATADIR=~/lubbock/data/ted-trans/derived/
 SEGSDIR=$DATADIR/segs/
@@ -13,7 +14,6 @@ mkdir -p $SEGSDIR
 echo "*** raw pros***"
 ./extract-spurt-feats.sh "$DATADIR/alignseg/${ALTCONV}.alignseg.txt" $DATADIR/prosfeats/ $DATADIR/wav/  > feat.log.txt
 
-RSCRIPTS=$PROSODY/
 echo "*** normalize ***"
 SPURTSFILE=$DATADIR/alignseg/$ALTCONV.alignseg.txt
 if [ ! -e $SEGSDIR/conv ]
