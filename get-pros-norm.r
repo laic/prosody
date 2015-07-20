@@ -13,7 +13,7 @@ if(length(args) < 4){
 #----------------------------------------------------------------
 print(args)
 currconv <- args[1]	## The identifier for the speech data
-featname <- args[2]	## F0 or Intensity
+featname <- args[2]	## F0 or Intensity, or something else?
 segsdir <- args[3]	## The working directory 
 spurtfile <- args[4]	## A text file listing segment metadata 
 			## This should be the same as used to extract
@@ -34,7 +34,10 @@ if (!file.exists(featdir)) {
 }
 
 #----------------------------------------------------------------
-# Get time series data.  
+# Read time series data from file.  
+# Praat outputs slightly different file formats for Pitch and Intensity tiers
+# hence the switching here. 
+ 
 if (featname == "i0") {
 	print("get.i0.tiers")
 	st <- "none"
@@ -44,6 +47,7 @@ if (featname == "i0") {
 	st <- "mean.val" 	## Convert to semitones based on speaker mean
 	x.list <- get.f0.tiers.conv(currconv, rawdir)
 } else {
+	## ADD EXTENSIONS HERE.
 	#To extend we have to add in suffix names, number of 
 	#lines to skip etc, because praat is not completely consistent.
 	#We might as well change to a switch statement. 
@@ -59,7 +63,7 @@ if (grep(".txt", spurtfile)) {
 		spurts.channel <-  data.table(read.table(spurtfile, header=F))
 		setnames(spurts.channel, c("conv","spk","participant","sid","chno","vsrc","starttime","endtime","wid","vconv","wav.file","video.file"))
 	} else {
-		## This is the one we want
+		## This is the one we want, should work for current ted files for example
 		spurts.channel <-  data.table(read.table(spurtfile, header=T))
 		if ("part" %in% names(spurts.channel)) {
 			setnames(spurts.channel, "part", "participant")
@@ -96,7 +100,7 @@ setnames(x.aggs, names(x.aggs), gsub(var.name, "val", names(x.aggs)))
 ## We keep the non-corrected version anyway.
 x.norm <- normalize.conv(x.offset, x.aggs, var.name=var.name, st=st, zscore=F, center=T, remove.outliers=T, remove.spurt.slope=T)
 
-print("HERE")
+#print("HERE")
 
 ## Adds some extra bibs and bobs
 conv.maxtime  <- spurts.channel[,list(maxtime=max(endtime, na.rm=T)),by=conv]

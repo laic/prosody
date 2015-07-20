@@ -11,9 +11,11 @@ SEGSDIR=$DATADIR/segs/
 
 mkdir -p $SEGSDIR
 
+## Get the raw frame level features from praat 
 echo "*** raw pros***"
 ./extract-spurt-feats.sh "$DATADIR/alignseg/${ALTCONV}.alignseg.txt" $DATADIR/prosfeats/ $DATADIR/wav/  > feat.log.txt
 
+## Do speaker normalization
 echo "*** normalize ***"
 SPURTSFILE=$DATADIR/alignseg/$ALTCONV.alignseg.txt
 if [ ! -e $SEGSDIR/conv ]
@@ -25,7 +27,10 @@ CONV=`head -n 2 $SPURTSFILE | tail -n 1 | cut -d " " -f 1`
 echo $ALTCONV $CONV
 Rscript $RSCRIPTS/get-pros-norm.r $CONV f0 $SEGSDIR $SPURTSFILE
 Rscript $RSCRIPTS/get-pros-norm.r $CONV i0 $SEGSDIR $SPURTSFILE
+## Extend to add other features
 
+
+## Get aggregate features over various segment size
 echo "*** word aggs***"
 WORDFILE=$DATADIR/alignword/$ALTCONV.alignword.txt
 Rscript $RSCRIPTS/get-pros-window.r $CONV f0 $SEGSDIR $WORDFILE
