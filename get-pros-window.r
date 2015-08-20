@@ -16,19 +16,21 @@ if(length(args)==0){
 print(args)
 currconv <- args[1]
 featname <- args[2]
-xdir <- args[3]
+xdir <- args[3] 	## Data Directory, input/output to/from  xdir/F0 etc.
 window.file  <- args[4]
 #window.type <- args[5]
 #----------------------------------------------------------
 ## get windows
 #window.file <- paste(window.dir, "/", currconv, ".", window.type, ".txt" sep="")		
 
+## Nowadays get window type from the file extension
 window.type <- strsplit(basename(window.file), "\\.")[[1]][2]
 print(window.type)
 
-
+## Read the segment times
 segs <- fread(window.file)
 
+## Temporarily rename the id column name for generality. 
 if (grepl("sent", window.type)) {
 	setnames(segs, "sent.id", "niteid")	
 } else if (grepl("word", window.type)){
@@ -39,9 +41,11 @@ if (grepl("sent", window.type)) {
 	print("What windowtype?")
 }
 
+## a data.table of segment times
 segs <- segs[,list(conv, xid=paste(conv, spk, sep="-"), niteid, wstarts=starttime, wends=endtime)]
 print(segs)
 
+## put segments into list, one data.table per speaker
 x.list <- dlply(segs, .(xid), function(x) {x})
 print(paste("spk NAMES:", names(x.list)))
 print(names(x.list[1]))
@@ -56,7 +60,7 @@ x.feat <- get(xobj)
 #	x.feat$participant[x.feat$xid == "Bmr031-H"] <- "me001"
 #}
 
-## Get aggs
+## Get segment based aggregates
 x.aggs <- get.var.aggs.spk(x.feat, windows=x.list, wkey="xid", var.name=toupper(featname))
 
 #if (featname == "i0") {
@@ -65,6 +69,7 @@ x.aggs <- get.var.aggs.spk(x.feat, windows=x.list, wkey="xid", var.name=toupper(
 #	x.aggs <- get.f0.aggs.spk(x.feat, windows=x.list, wkey="xid")
 #}
 
+## Output as a table 
 outfile.txt <- paste(xdir, "/", featname, "/", currconv, ".aggs.", window.type, ".txt", sep="")		
 print(outfile.txt)	
 write.table(x.aggs[order(wstart)], file=outfile.txt, row.names=F, quote=F)	

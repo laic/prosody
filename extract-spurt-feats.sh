@@ -1,7 +1,9 @@
 #!/bin/bash
 
+## Get raw F0 and intensity features using praat.  
+
 PRAAT=praat 		#/exports/home/clai/.local/bin/praat
-spurtfile=$1
+spurtfile=$1		## Segmentation file, see for example ~/lubbock/data/ted-trans/derived/alignseg/${ALTCONV}.alignseg.txt" 
 spurtdir=$2 		## This is the output directory 	
 indir=$3		## i.e. where the wav files are    
 
