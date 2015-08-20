@@ -45,6 +45,7 @@ print(segs)
 x.list <- dlply(segs, .(xid), function(x) {x})
 print(paste("spk NAMES:", names(x.list)))
 print(names(x.list[1]))
+
 ## get feature time series 
 objfile <- paste(xdir, "/", featname, "/", currconv, sep="")		
 xobj <- load(objfile)

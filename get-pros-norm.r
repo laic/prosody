@@ -53,6 +53,7 @@ if (featname == "i0") {
 ##----------------------------------------------------------------
 ## Get spurt info
 ## Need to account for some inconsistencies in file creation in the past!
+print("get spurtfile")
 print(spurtfile)
 if (grep(".txt", spurtfile)) {
 	if (grepl("asrspurts", spurtfile) || grepl("turns", spurtfile)) {  
@@ -81,22 +82,30 @@ if (grep(".txt", spurtfile)) {
 
 
 #summary(spurts.channel)
+#print("names x.list")
+#print(names(x.list))
 
 ## Add offset times
+print("add offset times")
 x.offset <- add.times(x.list, spurts.channel) 
 
 ## Get stats over all the data for each speaker
 var.name <- toupper(featname)
+print(var.name)
+#print(x.offset)
 x.aggs <- calc.spk.aggs(x.offset, var.name=var.name)
+print("HERE")
 setnames(x.aggs, names(x.aggs), gsub(var.name, "val", names(x.aggs)))
 
+print("x.aggs")
+#print(x.aggs)
 ## Get normalized values
 ## We can remove spurt slope if we want to focus on utterance
 ## internal features that might be affected by declination. 
 ## We keep the non-corrected version anyway.
+print("start normalization")
 x.norm <- normalize.conv(x.offset, x.aggs, var.name=var.name, st=st, zscore=F, center=T, remove.outliers=T, remove.spurt.slope=T)
 
-print("HERE")
 
 ## Adds some extra bibs and bobs
 conv.maxtime  <- spurts.channel[,list(maxtime=max(endtime, na.rm=T)),by=conv]

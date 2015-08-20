@@ -25,9 +25,17 @@ get.i0.tiers.conv <- function(currconv, pdir) {
 ## spurt info.
 add.times <- function(x.list, x.spurts.channel) {
         xdf <- data.table(unlist.df(x.list))
+	#print("xdf")
+	#print(xdf)
         setkey(xdf, fstem)
+	#write.table(xdf, file="xdf.txt")
         setkey(x.spurts.channel, wid)
+	#print("x.spurts.channel")
+	#print(x.spurts.channel)
+	#write.table(x.spurts.channel, file="x.spurts.channel.txt")
         y <- x.spurts.channel[xdf]
+	#print(y)
+	#write.table(y, file="y.txt")
         y$Time <- y$Time + y$starttime
         return(y)
 }
